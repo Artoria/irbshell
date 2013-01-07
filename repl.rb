@@ -1,4 +1,9 @@
 alias my_eval eval
+$: << File.dirname(__FILE__)
+begin
+  load ".irbshrc" 
+rescue LoadError
+end
 require 'irb'
 
 $PS1 = "Dir.getwd.tr('/', '\\\\') + '>'"
