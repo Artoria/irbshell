@@ -1,9 +1,4 @@
 alias my_eval eval
-$: << File.dirname(__FILE__)
-begin
-  load ".irbshrc" 
-rescue LoadError
-end
 require 'irb'
 
 $PS1 = "Dir.getwd.tr('/', '\\\\') + '>'"
@@ -19,15 +14,14 @@ def eval(str, *a)
     my_eval $PS1
   end
   $PS_ += 1
-  name = "CUSTOM#{$PS_}".to_sym
-  IRB.conf[:PROMPT][name] = {
+  IRB.conf[:PROMPT][:CUSTOM] = {
    :PROMPT_I => cd,
    :PROMPT_S => cd,
    :PROMPT_C => cd,
    :PROMPT_N => cd,
    :RETURN => "=> %s\n"
   }
-  IRB.conf[:PROMPT_MODE] = name
+  IRB.conf[:PROMPT_MODE] = :CUSTOM
   ret
 end
 
