@@ -1,20 +1,28 @@
 alias my_eval eval
 require 'irb'
+
+$PS1 = "Dir.getwd.tr('/', '\\\\') + '>'"
+$PS_ = 0
 def eval(str, *a)
   ret = if str[0] == '!'
     system str[1, str.length-1]
   else
     my_eval str, *a
   end
-  cd = `echo %cd%`.chomp + ">"
-  IRB.conf[:PROMPT_MODE] = :CUSTOM
-  IRB.conf[:PROMPT][:CUSTOM] = {
+  cd = my_eval $PS1
+  def cd.dup
+    my_eval $PS1
+  end
+  $PS_ += 1
+  name = "CUSTOM#{$PS_}".to_sym
+  IRB.conf[:PROMPT][name] = {
    :PROMPT_I => cd,
    :PROMPT_S => cd,
    :PROMPT_C => cd,
    :PROMPT_N => cd,
    :RETURN => "=> %s\n"
   }
+  IRB.conf[:PROMPT_MODE] = name
   ret
 end
 
