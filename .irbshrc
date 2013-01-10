@@ -21,14 +21,14 @@ cmd /^!(.*)/ do |k|
   true
 end
 
-cmd /cd\s+\"(.*)\"/ do |k|
+cmd /^cd\s+\"(.*)\"/ do |k|
   k = $ARG[1]
   Dir.chdir k
   set_prompt
   true
 end
 
-cmd /cd\s+(.*)/ do |k|
+cmd /^cd\s+(.*)/ do |k|
   k = $ARG[1]
   Dir.chdir k
   set_prompt
@@ -94,15 +94,32 @@ def overwrite_prompt(file)
   true
 end
 
+
+def mk(oldname, newname)
+    if FileTest.file?(File.join(oldname, "setup.rb"))
+       eval File.join(oldname, "setup.rb") + " " + newname
+    else
+       FileUtils.copy_entry(oldname, newname, false, false, true)
+    end
+    puts "#{newname} created from #{oldname}"
+end
+
 cmd /^mk (\S+)\s+(\S+)/ do
   templ, newname = $ARG[1], $ARG[2]
   templ_entity = runtime("templates/#{templ}")
   if overwrite_prompt(newname)
-    FileUtils.copy_entry(templ_entity, newname, true, true, true)
-    puts "#{newname} created from #{templ_entity}"
+    mk(templ_entity, newname)
   end
   true
 end
+
+cmd /^mk! (\S+)\s+(\S+)/ do
+  templ, newname = $ARG[1], $ARG[2]
+  templ_entity = runtime("templates/#{templ}")
+  mk(templ_entity, newname)
+  true
+end
+
 
 def do_shell(name, args)
  x = open(name, "r"){|f| f.readline.chomp}

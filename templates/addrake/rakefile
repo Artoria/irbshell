@@ -1,0 +1,10 @@
+task :default do
+  args = []
+  Dir.glob("*.add").to_a.sort.each{|x|
+    args.push File.read(x)
+  }
+  sh("#{args.join(' ')}")
+end
+
+
+
