@@ -112,7 +112,7 @@ def do_shell(name, args)
      true
  elsif x == "#!irbshell"
    system("ruby #{runtime(IREPLNAME)} -s #{name} #{args}")
-   true
+   "#!irbshell"
  elsif x == "#!irbshell here"
    io = IO.popen("ruby #{runtime(IREPLNAME)} #{name} #{args}", "w")
    io.write File.read(name)
@@ -124,7 +124,7 @@ def do_shell(name, args)
      end
    rescue Object
    end
-  true
+   "#!irbshell here"
  else
   false
  end
