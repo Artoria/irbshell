@@ -143,3 +143,7 @@ end
 cmd /^exit\b/ do |k|
   exit
 end
+
+cmd /^https?:\/\// do |k|
+  system("start #{k}")
+end
