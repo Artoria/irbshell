@@ -111,6 +111,7 @@ def do_shell(name, args)
      system("#{k} #{name} #{args}")
      true
  elsif x == "#!irbshell"
+  puts [name,args]
    io = IO.popen("ruby #{runtime(IREPLNAME)} #{name} #{args}", "w")
    io.close
   true
