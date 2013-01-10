@@ -111,7 +111,10 @@ def do_shell(name, args)
      system("#{k} #{name} #{args}")
      true
  elsif x == "#!irbshell"
-  system("ruby #{runtime(IREPLNAME)} -s #{name} #{args}")
+   io = IO.popen("ruby #{runtime(IREPLNAME)} #{args}", "w")
+   io.write File.read(name)
+   io.write "\nexit\n"
+   io.close
   true
  elsif x == "#!irbshell here"
    io = IO.popen("ruby #{runtime(IREPLNAME)} #{args}", "w")
@@ -120,7 +123,7 @@ def do_shell(name, args)
    begin
      loop do
        io.write (x = STDIN.gets) + "\n"
-	   break if x[/^exit\b/]
+       break if x[/^exit\b/]
      end
    rescue Object
    end
@@ -147,3 +150,4 @@ end
 cmd /^https?:\/\// do |k|
   system("start #{k}")
 end
+
