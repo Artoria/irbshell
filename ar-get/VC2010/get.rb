@@ -1,2 +1,3 @@
 #!irbshell
-http://ishare.iask.sina.com.cn/download/explain.php?fileid=9959160
+
+eval "http://ishare.iask.sina.com.cn/download/explain.php?fileid=9959160"
