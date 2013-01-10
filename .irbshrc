@@ -111,9 +111,7 @@ def do_shell(name, args)
      system("#{k} #{name} #{args}")
      true
  elsif x == "#!irbshell"
-   io = IO.popen("ruby #{runtime(IREPLNAME)} #{args}", "w")
-   io.write File.read(name)
-   io.write "\nexit\n"
+   io = IO.popen("ruby #{runtime(IREPLNAME)} #{name} #{args}", "w")
    io.close
   true
  elsif x == "#!irbshell here"
