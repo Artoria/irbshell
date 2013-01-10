@@ -106,7 +106,7 @@ end
 
 def do_shell(name, args)
  x = open(name, "r"){|f| f.readline.chomp}
- if !x[/^#!irbshell/] && x[0,2] == "#!"
+ if !x[/^\#\!irbshell/] && x[0,2] == "#!"
      k = x[2..-1]
      system("#{k} #{name} #{args}")
      true
@@ -147,7 +147,7 @@ cmd /^exit\b/ do |k|
   exit
 end
 
-cmd /^https?:\/\// do |k|
+cmd /^http(s?):\/\// do |k|
   system("start #{k}")
 end
 
