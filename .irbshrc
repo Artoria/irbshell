@@ -1,0 +1,38 @@
+puts "irbshell"
+puts Time.now
+
+
+cmd /^!/ do |k|
+  system(k[1..-1])
+  true
+end
+
+SHELLCOMMANDS = open("shell", "rb"){|f| Marshal.load(f)} rescue []
+
+def save_shell_commands
+  open("shell", "wb"){|f|
+     f.write Marshal.dump SHELLCOMMANDS
+  }
+end
+
+cmd /^\+sh\s+(.*)/ do |k|
+  SHELLCOMMANDS.push $ARG[1]
+  save_shell_commands
+  true
+end
+
+cmd /^\-sh\s+(.*)/ do |k|
+  SHELLCOMMANDS.delete $ARG[1]
+  save_shell_commands
+  true
+end
+
+cmd /^(\S+)\s*(.+)/ do |k|
+  if $ARG[1] != nil && SHELLCOMMANDS.index($ARG[1])
+     system("#{$ARG[1]} #{$ARG[2]}")
+     true
+  else
+     false
+  end
+
+end
