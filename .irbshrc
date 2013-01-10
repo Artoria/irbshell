@@ -1,18 +1,38 @@
-puts "irbshell"
-puts Time.now
+require 'FileUtils'
+require 'Open3'
+
+ENV['path'] = runtime("bin/#{RUBY_PLATFORM}/bin") + ";" + ENV['path']
+
+unless MYOPT[:silent]
+  puts "irbshell"
+  puts Time.now
+end
+
+SHELLCOMMANDS = load_data(runtime("shell")) rescue []
+OPTIONS = load_data(runtime("options")) rescue {}
 
 
-cmd /^!/ do |k|
-  system(k[1..-1])
+def save_shell_commands
+  save_data SHELLCOMMANDS, runtime("shell")
+end
+
+cmd /^!(.*)/ do |k|
+  system($ARG[1])
   true
 end
 
-SHELLCOMMANDS = open("shell", "rb"){|f| Marshal.load(f)} rescue []
+cmd /cd\s+\"(.*)\"/ do |k|
+  k = $ARG[1]
+  Dir.chdir k
+  set_prompt
+  true
+end
 
-def save_shell_commands
-  open("shell", "wb"){|f|
-     f.write Marshal.dump SHELLCOMMANDS
-  }
+cmd /cd\s+(.*)/ do |k|
+  k = $ARG[1]
+  Dir.chdir k
+  set_prompt
+  true
 end
 
 cmd /^\+sh\s+(.*)/ do |k|
@@ -34,4 +54,92 @@ cmd /^(\S+)(\s+(.+))?/ do |k|
   else
      false
   end
+end
+
+cmd /^\+(\S+)\s+(.*)/ do |k|
+  OPTIONS[$ARG[1]]=$ARG[2]
+  save_data OPTIONS, runtime("options")
+  true
+end
+
+cmd /^\-(\S+)/ do |k|
+  OPTIONS.delete $ARG[1]
+  save_data OPTIONS, runtime("options")
+  true
+end
+
+cmd /^make$/ do |k|
+  make = OPTIONS["makeprg"] || "make"
+  system(make)
+  true
+end
+
+
+def overwrite_prompt(file)
+  if FileTest.file?(file)
+   while true
+    print "File #{file} exists, overwrite?"
+    x = gets
+    return true if x[/^[Yy]/]
+    return false if x[/^[Nn]/]
+   end
+ elsif FileTest.directory?(file)
+   while true
+    print "Directory #{file} exists, overwrite?"
+    x = gets
+    return true if x[/^[Yy]/]
+    return false if x[/^[Nn]/]
+   end
+  end
+  true
+end
+
+cmd /^mk (\S+)\s+(\S+)/ do
+  templ, newname = $ARG[1], $ARG[2]
+  templ_entity = runtime("templates/#{templ}")
+  if overwrite_prompt(newname)
+    FileUtils.copy_entry(templ_entity, newname, true, true, true)
+    puts "#{newname} created from #{templ_entity}"
+  end
+  true
+end
+
+def do_shell(name, args)
+ x = open(name, "r"){|f| f.readline.chomp}
+ if !x[/^#!irbshell/] && x[0,2] == "#!"
+     k = x[2..-1]
+     system("#{k} #{name} #{args}")
+     true
+ elsif x == "#!irbshell"
+  system("ruby #{runtime(IREPLNAME)} -s #{name} #{args}")
+  true
+ elsif x == "#!irbshell here"
+   io = IO.popen("ruby #{runtime(IREPLNAME)} #{args}", "w")
+   io.write File.read(name)
+   io.write "\n"
+   begin
+     loop do
+       io.write (x = STDIN.gets) + "\n"
+	   break if x[/^exit\b/]
+     end
+   rescue Object
+   end
+  true
+ else
+  false
+ end
+end
+
+cmd /^(\S+)(\s+(.+))?/ do |k|
+  name = current_or_runtime($ARG[1])
+  args = $ARG[2]
+  if FileTest.exists?(name)
+    do_shell(name, args)
+  else
+    false
+  end
+end
+
+cmd /^exit\b/ do |k|
+  exit
 end
