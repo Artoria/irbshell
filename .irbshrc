@@ -27,12 +27,11 @@ cmd /^\-sh\s+(.*)/ do |k|
   true
 end
 
-cmd /^(\S+)\s*(.+)/ do |k|
+cmd /^(\S+)(\s+(.+))?/ do |k|
   if $ARG[1] != nil && SHELLCOMMANDS.index($ARG[1])
      system("#{$ARG[1]} #{$ARG[2]}")
      true
   else
      false
   end
-
 end
