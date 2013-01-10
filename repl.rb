@@ -75,9 +75,6 @@ module IREPL
         y[0] =~ str
         $ARG = $~
         ret = y[1].call(str, *a)
-        if ret
-           puts y[0]
-        end
         break if ret
       }
       set_prompt unless $PS1

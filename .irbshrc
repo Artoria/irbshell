@@ -133,6 +133,7 @@ end
 cmd /^(\S+)(\s+(.+))?/ do |k|
   name = current_or_runtime($ARG[1])
   args = $ARG[2]
+  puts "here"
   if FileTest.exists?(name)
     do_shell(name, args)
   else
