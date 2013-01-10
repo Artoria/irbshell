@@ -109,7 +109,7 @@ def do_shell(name, args)
  if (x.index("#!irbshell")!=0) && x[0,2] == "#!"
      k = x[2..-1]
      system("#{k} #{name} #{args}")
-     true
+     k
  elsif x == "#!irbshell"
    system("ruby #{runtime(IREPLNAME)} -s #{name} #{args}")
    "#!irbshell"
