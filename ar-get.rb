@@ -1,4 +1,4 @@
-#!irbshell here
+#!irbshell
 
 #!wget "https://github.com/Artoria/irbshell/raw/master/ar-get.list"
 #x = File.read("ar-get.list").split(/\n/)
