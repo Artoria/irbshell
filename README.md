@@ -11,17 +11,68 @@ ruby repl.rb
 now mostly look like an ordinary IRB, with an exception that it prompts current directory instead.
 (you could use global variable $PS1 to change the prompt)
 
-To run a program, use "!" before command line, e.g.
+==>To run a program, use "!" before command line, e.g.
 <pre>
- !git init
+ >!git init
 </pre>
 
 if you use +sh, "!" could be omited. The effect of +sh is permanent, until you use "-sh".
 
 <pre>
- +sh git
- git init
+ >+sh git
+ >git init
+ >-sh git
+ #you must use !git init now.
 </pre>
+
+==>To do normal ruby calculation:
+<pre>
+ >3+5
+ => 8
+</pre>
+This is the default behavior of IRB.
+
+==>To define a customized command, this is just the way we define other stuff:
+see .irbshrc
+
+<pre>
+ > cmd /say\s*(.*)/ do |line, *a|
+    puts $ARG[1] # $ARG is used like $~, $ARG[1] is like $1, but exactly what after "say"
+    true
+ end
+ >say Hello
+ Hello
+ => true
+</pre>
+
+==>To write a script:
+>!vim a.rb
+then write and save as a.rb:
+<pre>
+#!irbshell
+1.00
+cd ".."
+puts "Hello world"
+</pre>
+
+and then:
+
+>a.rb
+#!irbshell
+#!irbshell
+1.00
+cd ".."
+puts "Hello world"
+Hello world
+=> "#!irbshell"
+
+we can now only see mix script and user-input/output, this will be improved in future.
+
+
+
+
+
+
 
 
 usage of mk
