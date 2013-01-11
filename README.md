@@ -58,6 +58,7 @@ puts "Hello world"
 and then:
 
 >a.rb
+<pre>
 #!irbshell
 #!irbshell
 1.00
@@ -65,8 +66,8 @@ cd ".."
 puts "Hello world"
 Hello world
 => "#!irbshell"
-
-we can now only see mix script and user-input/output, this will be improved in future.
+</pre>
+we can now only see a mix of script and user-input/output, this will be improved in future.
 
 
 
