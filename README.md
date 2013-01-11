@@ -11,6 +11,17 @@ ruby repl.rb
 now mostly look like an ordinary IRB, with an exception that it prompts current directory instead.
 
 To run a program, use "!" before command line, e.g.
+<pre>
+ !git init
+</pre>
+
+if you use +sh,  "!" could be omited, and +sh/-sh will be saved immediately.
+
+<pre>
+ +sh git
+ git init
+</pre>
+
 
 <pre>
   +sh git
