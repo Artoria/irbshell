@@ -125,7 +125,7 @@ def do_shell(name, args)
  x = open(name, "r"){|f| f.readline.chomp}
  if (x.index("#!irbshell")!=0) && x[0,2] == "#!"
      k = x[2..-1]
-     system("#{k} #{name} #{args}")
+     eval("#{k} #{name} #{args}")
      k
  elsif x == "#!irbshell"
    system("ruby #{runtime(IREPLNAME)} -s #{name} #{args}")
