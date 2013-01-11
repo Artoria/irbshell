@@ -9,26 +9,20 @@ basic usage
 ruby repl.rb
 
 now mostly look like an ordinary IRB, with an exception that it prompts current directory instead.
+(you could use global variable $PS1 to change the prompt)
 
 To run a program, use "!" before command line, e.g.
 <pre>
  !git init
 </pre>
 
-if you use +sh,  "!" could be omited, and +sh/-sh will be saved immediately.
+if you use +sh, "!" could be omited. The effect of +sh is permanent, until you use "-sh".
 
 <pre>
  +sh git
  git init
 </pre>
 
-
-<pre>
-  +sh git
-  +sh ls
-  git init
-  ls
-</pre>
 
 usage of mk
 =====
