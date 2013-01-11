@@ -102,7 +102,10 @@ a full example:
   cd a
   rake
 </pre>
-
+or
+<pre>
+ mk! sample_zlib_project a
+</pre>
 
 usage of script files
 =====
